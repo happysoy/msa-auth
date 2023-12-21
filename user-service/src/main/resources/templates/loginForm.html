@@ -52,7 +52,7 @@
             </div>
             <div class="col">
                 <button class="w-100 btn btn-secondary btn-lg"
-                        th:onclick="|location.href='@{/account/join}'|"
+                        th:onclick="|location.href='@{/user-service/join}'|"
                         type="button">회원가입</button>
             </div>
         </div>
@@ -72,14 +72,14 @@
 
             $.ajax({
                 type:'POST',
-                url: '/auth/login',
+                url: '/user-service/api/login',
                 contentType:'application/json; charset=utf-8',
                 data: JSON.stringify(body),
                 success: function (data) {
                     console.log("data", data);
                     sessionStorage.setItem("ACCESS_TOKEN", data.result['accessToken']);
                     sessionStorage.setItem("REFRESH_TOKEN", data.result['refreshToken']);
-                    window.location.href="/account/profile";
+                    window.location.href="/user-service/profile";
 
                 },
                 error: function (err) {

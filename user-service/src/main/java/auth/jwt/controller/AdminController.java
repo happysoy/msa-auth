@@ -16,7 +16,7 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/admin")
+@RequestMapping("/user-service/admin/api")
 public class AdminController {
     /**
      * 유저 관리
@@ -26,7 +26,7 @@ public class AdminController {
     private final ResponseService responseService;
 
     // TODO 페이징으로 처리하기
-    @GetMapping("/api/users")
+    @GetMapping("/users")
     public DataResponse<List<UserInfoResponse>> getMemberList() { // TODO <LIST<UserInfoResponse>>를 UserListResponse 레코드로 못바꾸나?
         return responseService.getResultResponse(userService.getUserList());
     }

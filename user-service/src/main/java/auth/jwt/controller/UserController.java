@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/auth")
+@RequestMapping("/user-service/api")
 public class UserController {
 
     private final UserService userService;
@@ -54,7 +54,7 @@ public class UserController {
     }
 
 
-    @GetMapping("/api/profile")
+    @GetMapping("/profile")
     public DataResponse<UserInfoResponse> getUserInfo(@RequestHeader("ACCESS_TOKEN") String accessToken) {
         return responseService.getResultResponse(userService.userInfoResponse(accessToken));
     }
@@ -62,7 +62,7 @@ public class UserController {
     /**
      * 토큰 재발급
      */
-    @PostMapping("/api/access-refresh")
+    @PostMapping("/access-refresh")
     public DataResponse<LoginResponse> accessRefreshToken(@Validated @RequestBody TokenRefreshRequest request, Errors errors) {
 
         if (errors.hasErrors()) {

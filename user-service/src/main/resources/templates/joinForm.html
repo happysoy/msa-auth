@@ -2,8 +2,9 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="utf-8">
-    <link th:href="@{/css/bootstrap.min.css}"
-          href="../css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+<!--    <link th:href="@{/css/bootstrap.min.css}"-->
+<!--          href="../css/bootstrap.min.css" rel="stylesheet">-->
     <style>
         .container {
             max-width: 400px;
@@ -65,7 +66,7 @@
             </div>
             <div class="col">
                 <button class="w-100 btn btn-secondary btn-lg"
-                        th:onclick="|location.href='@{/account/login}'|"
+                        th:onclick="|location.href='@{/user-service/login}'|"
                         type="button">로그인</button>
             </div>
         </div>
@@ -88,11 +89,11 @@
 
             $.ajax({
                 type:'POST',
-                url: '/auth/join',
+                url: '/user-service/api/join',
                 contentType:'application/json; charset=utf-8',
                 data: JSON.stringify(body),
                 success: function () {
-                    window.location.href="/account/login";
+                    window.location.href="/user-service/login";
                 },
                 error: function (err) {
                     alert("각각에 대해 처리하기");

@@ -41,7 +41,7 @@
     $(document).ready(function(){
         $.ajax({
             type: 'GET',
-            url: '/admin/api/users',
+            url: '/user-service/admin/api/users',
             contentType: 'application/json',
             beforeSend: function (xhr) {
                 xhr.setRequestHeader("Content-type", "application/json");
@@ -76,7 +76,7 @@
             }
             $.ajax({
                 type:"POST",
-                url: "/auth/api/access-refresh",
+                url: "/user-service/api/access-refresh",
                 contentType:'application/json',
                 data: JSON.stringify(params),
                 success: function (data) {
