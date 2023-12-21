@@ -1,10 +1,5 @@
 server:
-  port: 8080
-
-spring:
-  application:
-    name: api-gateway-service
-
+  port: 8080 #http://localhost:8080/swagger-ui/index.html
 
 eureka:
   client:
@@ -15,3 +10,58 @@ eureka:
 
   instance:
     instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
+
+
+spring:
+  application:
+    name: api-gateway-service
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+
+  cloud:
+    gateway:
+      globalcors:
+        add-to-simple-url-handler-mapping: true
+        cors-configurations:
+          '[/**]':
+            allowedOrigins: "http://localhost:3000"
+            allowedMethods:
+              - GET
+              - POST
+              - PUT
+              - PATCH
+              - DELETE
+              - OPTIONS
+            allowedHeaders:
+              - x-requested-with
+              - authorization
+              - content-type
+              - credential
+              - X-AUTH-TOKEN
+
+      default-filters:
+        - name: GlobalFilter
+          args:
+            baseMessage: Spring Cloud Gateway
+            preLogger: true
+            postLogger: true
+
+      routes:
+        - id: user-service
+          uri: lb://USER-SERVICE
+          predicates:
+            - Path=/user-service/api/**
+        - id: user-service
+          uri: lb://USER-SERVICE
+          predicates:
+            - Path=/user-service/**
+management:
+  endpoint:
+    features:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include:
+          - "gateway"
