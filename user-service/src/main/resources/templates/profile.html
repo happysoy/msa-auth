@@ -1,0 +1,101 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <link th:href="@{/css/bootstrap.min.css}"
+          href="../css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .container {
+            max-width: 400px;
+        }
+        .field-error {
+            border-color: #dc3545;
+            color: #dc3545;
+        }
+    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+</head>
+<body>
+
+<div class="container">
+
+    <div class="py-5 text-center">
+        <h2>프로필 정보</h2>
+        <p><span class="username"></span> 님 안녕하세요!</p>
+    </div>
+
+    <div>
+        <h4>회원 정보</h4>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Email</th> <th>Name</th>
+                </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td><div id="email"></div></td>
+                <td><div class="username"></div></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <!--    <form action="item.html" th:action th:object="${loginForm}" method="post">-->
+
+</div> <!-- /container -->
+</body>
+
+<script>
+    $(document).ready(function(){
+
+        $.ajax({
+            type: 'GET',
+            url: '/auth/api/profile',
+            contentType: 'application/json',
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader("Content-type", "application/json");
+                xhr.setRequestHeader("ACCESS_TOKEN", sessionStorage.getItem("ACCESS_TOKEN"));
+            },
+            success: function (data) {
+                console.log(data);
+                document.getElementById("email").textContent = data.result["email"];
+                document.getElementsByClassName("username")[0].textContent = data.result["username"];
+                document.getElementsByClassName("username")[1].textContent = data.result["username"];
+
+            },
+            error: function (err) {
+                refresh();
+            },
+
+        });
+
+
+        function refresh() {
+            let params={
+                accessToken: sessionStorage.getItem("ACCESS_TOKEN"),
+                refreshToken: sessionStorage.getItem("REFRESH_TOKEN")
+            }
+            $.ajax({
+                type:"POST",
+                url: "/auth/api/access-refresh",
+                contentType:'application/json',
+                data: JSON.stringify(params),
+                success: function (data) {
+                    alert("토큰이 재발급 되었습니다");
+                    sessionStorage.setItem("ACCESS_TOKEN", data.result['accessToken']);
+                    sessionStorage.setItem("REFRESH_TOKEN", data.result["refreshToken"]);
+                },
+                error: function (err) {
+                    alert("토큰이 유효하지 않습니다");
+                    // window.location.href="/account/login"; // TODO 여기로 가기전에 컨트롤러에서 막기
+                }
+
+            })
+        }
+
+
+    });
+</script>
+
+</html>

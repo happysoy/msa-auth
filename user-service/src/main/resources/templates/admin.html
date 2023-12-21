@@ -1,0 +1,99 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <link th:href="@{/css/bootstrap.min.css}"
+          href="../css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        .container {
+            max-width: 400px;
+        }
+        .field-error {
+            border-color: #dc3545;
+            color: #dc3545;
+        }
+    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+</head>
+<body>
+
+<div class="container">
+
+    <div class="py-5 text-center">
+        <h2>관리자 페이지</h2>
+    </div>
+
+    <div>
+        <h4>회원 정보</h4>
+        <div><table id="userList" class="table table-striped"></table></div>
+
+
+    </div>
+    <!--    <form action="item.html" th:action th:object="${loginForm}" method="post">-->
+
+</div> <!-- /container -->
+</body>
+
+<script>
+
+    $(document).ready(function(){
+        $.ajax({
+            type: 'GET',
+            url: '/admin/api/users',
+            contentType: 'application/json',
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader("Content-type", "application/json");
+                xhr.setRequestHeader("ACCESS_TOKEN", sessionStorage.getItem("ACCESS_TOKEN"));
+            },
+            success: function (data) {
+                let result = data["result"];
+                let str="";
+                str += "<thead><tr><th>Email</th><th>Name</th></tr></thead>"
+
+                str +="<tbody>";
+                $.each(result, function (i) {
+                    str += "<tr>"
+                    str += "<td>" + result[i].email + "</td>" + "<td>" + result[i].username + "</td>"
+                    str += "</tr>"
+                });
+                str +="<tbody>";
+                document.getElementById("userList").innerHTML = str;
+
+
+            },
+            error: function (err) {
+                alert("접근 권한이 없습니다");
+                // refresh();
+            },
+
+        });
+        function refresh() {
+            let params={
+                accessToken: sessionStorage.getItem("ACCESS_TOKEN"),
+                refreshToken: sessionStorage.getItem("REFRESH_TOKEN")
+            }
+            $.ajax({
+                type:"POST",
+                url: "/auth/api/access-refresh",
+                contentType:'application/json',
+                data: JSON.stringify(params),
+                success: function (data) {
+                    alert("토큰이 재발급 되었습니다");
+                    sessionStorage.setItem("ACCESS_TOKEN", data.result['accessToken']);
+                    sessionStorage.setItem("REFRESH_TOKEN", data["refreshToken"]);
+                },
+                error: function (err) {
+                    alert("토큰이 유효하지 않습니다");
+                    // window.location.href="/account/login";
+                }
+
+            })
+        }
+
+
+    });
+</script>
+
+</html>
