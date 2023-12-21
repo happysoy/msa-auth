@@ -1,10 +1,14 @@
 package auth.apigateway.config;
 
-import lombok.RequiredArgsConstructor;
+
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import io.swagger.v3.oas.annotations.info.Info;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-
 @Configuration
-@RequiredArgsConstructor
+@OpenAPIDefinition(info = @Info(title = "API Documentation", version = "1.0"))
 public class SwaggerConfig {
+
+
 }
