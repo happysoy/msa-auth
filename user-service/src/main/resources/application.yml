@@ -39,6 +39,8 @@ spring:
     pathmatch:
       matching-strategy: ant_path_matcher
 
+
+
 eureka:
   client:
     serviceUrl:
@@ -61,6 +63,8 @@ eureka:
 #    operations-sorter: alpha
 
 
+
+# env.properties에 넣어줘야 한다
 secret:
   jwt:
     token:

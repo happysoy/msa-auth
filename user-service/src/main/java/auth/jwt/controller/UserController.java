@@ -55,7 +55,6 @@ public class UserController {
 
     @GetMapping("/token/profile")
     public DataResponse<UserInfoResponse> getUserInfo(@RequestHeader("ACCESS_TOKEN") String accessToken) {
-        log.info("작동되라고!!!!!!");
         return responseService.getResultResponse(userService.userInfoResponse(accessToken));
     }
 
@@ -73,7 +72,6 @@ public class UserController {
 
     @PostMapping("/logout")
     public CodeMessageResponse logoutPost(@Validated @RequestBody LoginResponse response,Errors errors) {
-        log.info("로그아웃 시작");
         // access token 검증
         if (errors.hasErrors()) {
             ExceptionStatusProvider.throwError(errors);

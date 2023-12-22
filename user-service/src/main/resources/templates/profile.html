@@ -42,15 +42,18 @@
         </table>
 
         <div class="row">
+            <div class="col">
             <button class="w-100 btn btn-secondary btn-lg"
                     th:onclick="|location.href='@{/user-service/admin}'|"
                     type="button">관리자 페이지</button>
+            </div>
+
+            <div class="col">
+                <button class="w-100 btn btn-primary btn-lg" type="button" id="logoutBtn">로그아웃</button>
+            </div>
         </div>
 
 
-        <div class="col">
-            <button class="w-100 btn btn-primary btn-lg" type="button" id="logoutBtn">로그아웃</button>
-        </div>
     </div>
     <!--    <form action="item.html" th:action th:object="${loginForm}" method="post">-->
 

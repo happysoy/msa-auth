@@ -40,9 +40,6 @@ public class UserService {
      */
     @Transactional
     public JoinRequest join(JoinRequest request) {
-
-        //TODO passwordCheck도 암호화 해줘야 함
-
         // 비밀번호와 비밀번호 확인 일치 검증
         if (!request.getPassword().equals(request.getPasswordCheck())) {
             throw new GlobalException(ExceptionStatus.FAIL_PASSWORD_CHECK);
@@ -69,7 +66,6 @@ public class UserService {
 
         // User 생성
         User user = User.createUser(request.getEmail(), request.getPassword(), request.getUsername(), Role.USER, saltPassword);
-
 
         // JPA 설정(email column unique=true)을 통해 동일 이메일에 대한 회원가입 요청 처리
         userRepository.save(user);
@@ -115,7 +111,6 @@ public class UserService {
      */
     @Transactional
     public void logout(LoginResponse request) {
-        log.info("로그아웃 시작 service");
         // access token 유효성 검증
         String accessToken = request.accessToken();
 
