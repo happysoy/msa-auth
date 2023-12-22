@@ -26,6 +26,9 @@ dependencies {
 
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2'
 
+	// MacOS DNS solution
+//	implementation 'io.netty:netty-resolver-dns-native-macos:2.0.31.Final'
+
 
 	implementation 'io.jsonwebtoken:jjwt-api:0.11.2'
 	compileOnly 'org.projectlombok:lombok'

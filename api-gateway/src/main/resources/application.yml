@@ -21,25 +21,6 @@ spring:
 
   cloud:
     gateway:
-      globalcors:
-        add-to-simple-url-handler-mapping: true
-        cors-configurations:
-          '[/**]':
-            allowedOrigins: "http://localhost:3000"
-            allowedMethods:
-              - GET
-              - POST
-              - PUT
-              - PATCH
-              - DELETE
-              - OPTIONS
-            allowedHeaders:
-              - x-requested-with
-              - authorization
-              - content-type
-              - credential
-              - X-AUTH-TOKEN
-
       default-filters:
         - name: GlobalFilter
           args:
@@ -51,11 +32,21 @@ spring:
         - id: user-service
           uri: lb://USER-SERVICE
           predicates:
-            - Path=/user-service/api/**
+            - Path=/user-service/token/**
+          filters:
+            - name: AuthorizationHeaderFilter
+        - id: user-service
+          uri: lb://USER-SERVICE
+          predicates:
+            - Path=/user-service/admin/users
+          filters:
+            - name: RoleAdminFilter
         - id: user-service
           uri: lb://USER-SERVICE
           predicates:
             - Path=/user-service/**
+
+
 management:
   endpoint:
     features:
@@ -64,4 +55,10 @@ management:
     web:
       exposure:
         include:
-          - "gateway"
+          - "*"
+
+
+secret:
+  jwt:
+    token:
+      secret-key: amFuZ2phbmdqYW5namFuZ2phbmdqYW5namFuZ2phbmc=dsfkjsgfgkjdklghdfskjhgkjsglkfjskghfdkjdhdskjfhgkjfdhgdkjhfdjhdffdhjhgdfjkndjcvhgdf
