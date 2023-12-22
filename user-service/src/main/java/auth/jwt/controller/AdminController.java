@@ -16,7 +16,7 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/user-service/admin/api")
+@RequestMapping("/user-service/admin")
 public class AdminController {
     /**
      * 유저 관리

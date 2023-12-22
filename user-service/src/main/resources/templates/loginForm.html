@@ -72,7 +72,7 @@
 
             $.ajax({
                 type:'POST',
-                url: '/user-service/api/login',
+                url: '/user-service/login',
                 contentType:'application/json; charset=utf-8',
                 data: JSON.stringify(body),
                 success: function (data) {
@@ -90,5 +90,6 @@
         });
     });
 </script>
+
 
 </html>

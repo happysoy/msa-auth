@@ -41,7 +41,7 @@
     $(document).ready(function(){
         $.ajax({
             type: 'GET',
-            url: '/user-service/admin/api/users',
+            url: '/user-service/admin/users',
             contentType: 'application/json',
             beforeSend: function (xhr) {
                 xhr.setRequestHeader("Content-type", "application/json");
@@ -65,7 +65,7 @@
             },
             error: function (err) {
                 alert("접근 권한이 없습니다");
-                // refresh();
+                window.location.href = '/user-service/profile';
             },
 
         });
@@ -76,11 +76,11 @@
             }
             $.ajax({
                 type:"POST",
-                url: "/user-service/api/access-refresh",
+                url: "/user-service/token/access-refresh",
                 contentType:'application/json',
                 data: JSON.stringify(params),
                 success: function (data) {
-                    alert("토큰이 재발급 되었습니다");
+                    alert("토큰이 (재)발급 되었습니다");
                     sessionStorage.setItem("ACCESS_TOKEN", data.result['accessToken']);
                     sessionStorage.setItem("REFRESH_TOKEN", data["refreshToken"]);
                 },

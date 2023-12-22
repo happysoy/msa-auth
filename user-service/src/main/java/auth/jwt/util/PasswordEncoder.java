@@ -16,7 +16,7 @@ public class PasswordEncoder {
 
         // random 하게 salt 생성
         SecureRandom random = new SecureRandom();
-        byte[] salt = new byte[32]; //TODO 32byte 인 이유
+        byte[] salt = new byte[32]; // Salt의 길이가 32byte 이상이어야 Salt와 digest를 추측하기 어렵다
 
         // 난수 생성
         random.nextBytes(salt);
@@ -33,7 +33,7 @@ public class PasswordEncoder {
         return buffer.toString();
     }
 
-    // SHA-256 알고리즘 적용
+    // SHA-256 알고리즘으로 비밀번호 암호화
     public static String getEncryption(String salt, String password) {
         String original = salt + password;
 

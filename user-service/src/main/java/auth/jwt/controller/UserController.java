@@ -3,6 +3,7 @@ package auth.jwt.controller;
 import auth.jwt.dto.request.JoinRequest;
 import auth.jwt.dto.request.LoginRequest;
 import auth.jwt.dto.request.TokenRefreshRequest;
+import auth.jwt.dto.response.CodeMessageResponse;
 import auth.jwt.dto.response.DataResponse;
 import auth.jwt.dto.response.LoginResponse;
 import auth.jwt.dto.response.UserInfoResponse;
@@ -19,13 +20,11 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/user-service/api")
+@RequestMapping("/user-service")
 public class UserController {
 
     private final UserService userService;
     private final ResponseService responseService;
-
-
 
     /**
      * 회원가입
@@ -54,21 +53,30 @@ public class UserController {
     }
 
 
-    @GetMapping("/profile")
+    @GetMapping("/token/profile")
     public DataResponse<UserInfoResponse> getUserInfo(@RequestHeader("ACCESS_TOKEN") String accessToken) {
+        log.info("작동되라고!!!!!!");
         return responseService.getResultResponse(userService.userInfoResponse(accessToken));
     }
 
     /**
      * 토큰 재발급
      */
-    @PostMapping("/access-refresh")
+    @PostMapping("/token/access-refresh")
     public DataResponse<LoginResponse> accessRefreshToken(@Validated @RequestBody TokenRefreshRequest request, Errors errors) {
 
         if (errors.hasErrors()) {
             ExceptionStatusProvider.throwError(errors);
         }
         return responseService.getResultResponse(userService.getAccessTokenRefresh(request));
+    }
+
+    @PostMapping("/logout")
+    public CodeMessageResponse logoutPost() {
+
+        // access token 검증
+
+        return responseService.getSuccessResponse();
     }
 
 

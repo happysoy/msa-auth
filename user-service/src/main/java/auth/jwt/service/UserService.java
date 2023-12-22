@@ -61,6 +61,7 @@ public class UserService {
         request.setPassword(digest); // 해싱된 비밀번호로 변경하기 위해 JoinRequestDTO는 class로 설계
 
         // TODO 로직 분리
+        // TODO static을 빼야할걸?
         // SaltPassword 정보 생성
         SaltPassword saltPassword = new SaltPassword();
         saltPassword.setSalt(salt);
@@ -144,12 +145,14 @@ public class UserService {
 
         // accessToken 에서 이메일 추출
         String email = jwtProvider.getEmailByToken(accessToken);
+        log.info("email={}", email);
 
         // 회원가입 하지 않은 회원 처리
         User user = userRepository.findByEmail(email).orElseThrow(() -> new GlobalException(ExceptionStatus.EMPTY_USER));
 
         // redis 에 refreshToken 이 존재하지 않는 경우(만료) 예외 처리
         if (!redisService.isExistKey(refreshToken)) {
+            log.info("토큰 존재 x");
             throw new GlobalException(ExceptionStatus.INVALID_TOKEN);
         }
 
