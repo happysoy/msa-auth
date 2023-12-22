@@ -106,10 +106,17 @@
         }
 
         $('#logoutBtn').click(function () {
+            let params={
+                accessToken: sessionStorage.getItem("ACCESS_TOKEN"),
+                refreshToken: sessionStorage.getItem("REFRESH_TOKEN")
+            }
             $.ajax({
                 type:'POST',
                 url: '/user-service/logout',
+                contentType:'application/json',
+                data: JSON.stringify(params),
                 success: function () {
+                    alert("로그아웃 되었습니다");
                     sessionStorage.removeItem("ACCESS_TOKEN");
                     window.location.href="/user-service/login";
                 },

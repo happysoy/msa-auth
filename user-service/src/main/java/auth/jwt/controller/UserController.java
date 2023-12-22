@@ -72,9 +72,13 @@ public class UserController {
     }
 
     @PostMapping("/logout")
-    public CodeMessageResponse logoutPost() {
-
+    public CodeMessageResponse logoutPost(@Validated @RequestBody LoginResponse response,Errors errors) {
+        log.info("로그아웃 시작");
         // access token 검증
+        if (errors.hasErrors()) {
+            ExceptionStatusProvider.throwError(errors);
+        }
+        userService.logout(response);
 
         return responseService.getSuccessResponse();
     }

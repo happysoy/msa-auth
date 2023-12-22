@@ -18,6 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Duration;
 import java.util.List;
 
 @Slf4j
@@ -113,7 +114,27 @@ public class UserService {
      * RefreshToken 삭제
      */
     @Transactional
-    public void logout() {
+    public void logout(LoginResponse request) {
+        log.info("로그아웃 시작 service");
+        // access token 유효성 검증
+        String accessToken = request.accessToken();
+
+//        if (!jwtProvider.validateToken(accessToken)){
+//            throw new GlobalException(ExceptionStatus.INVALID_TOKEN);
+//        }
+
+        String email = jwtProvider.getEmailByToken(accessToken);
+
+
+        String redisKey = request.refreshToken();
+        // refresh token 삭제
+        if (redisService.getRedisTemplateValue(redisKey) != null) {
+            redisService.deleteRedisTemplateValue(redisKey);
+        }
+
+        // access token 유효시간과 함께 BlackList에 저장
+        redisService.setRedisTemplate(accessToken, "logout", 3); // TTL 기능을 통해 유효시간 설정 -> 3일
+
 
     }
 
@@ -152,7 +173,7 @@ public class UserService {
 
         // redis 에 refreshToken 이 존재하지 않는 경우(만료) 예외 처리
         if (!redisService.isExistKey(refreshToken)) {
-            log.info("토큰 존재 x");
+            log.info("토큰이 존재하지 않습니다");
             throw new GlobalException(ExceptionStatus.INVALID_TOKEN);
         }
 
