@@ -79,11 +79,11 @@
                     console.log("data", data);
                     sessionStorage.setItem("ACCESS_TOKEN", data.result['accessToken']);
                     sessionStorage.setItem("REFRESH_TOKEN", data.result['refreshToken']);
-                    window.location.href="/user-service/profile";
+                    window.location.replace("/user-service/profile");
 
                 },
                 error: function (err) {
-                    alert("각각에 대해 처리하기");
+                    alert(err["responseJSON"]["message"]);
                 },
             });
 

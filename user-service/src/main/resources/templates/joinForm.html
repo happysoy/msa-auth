@@ -96,7 +96,7 @@
                     window.location.href="/user-service/login";
                 },
                 error: function (err) {
-                    alert("각각에 대해 처리하기");
+                    alert(err["responseJSON"]["message"]);
                 },
             });
 

@@ -30,6 +30,10 @@
         <div><table id="userList" class="table table-striped"></table></div>
 
 
+        <div class="col">
+            <button class="w-100 btn btn-secondary btn-lg"
+                    type="button" id="back">뒤로가기</button>
+        </div>
     </div>
     <!--    <form action="item.html" th:action th:object="${loginForm}" method="post">-->
 
@@ -94,6 +98,9 @@
 
 
     });
+    document.querySelector('#back').onclick = function() {
+        history.back();
+    }
 </script>
 
 </html>

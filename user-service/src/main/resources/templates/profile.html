@@ -61,6 +61,7 @@
 </body>
 
 <script>
+
     $(document).ready(function(){
 
         $.ajax({
@@ -121,7 +122,7 @@
                 success: function () {
                     alert("로그아웃 되었습니다");
                     sessionStorage.removeItem("ACCESS_TOKEN");
-                    window.location.href="/user-service/login";
+                    window.location.replace("/user-service/login");
                 },
                 error: function (err) {
                     alert("각각에 대해 처리하기");
