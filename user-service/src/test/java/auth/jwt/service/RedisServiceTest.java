@@ -6,6 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.util.Date;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
@@ -19,8 +23,11 @@ class RedisServiceTest { //Redis 는 Transaction 처리를 따로 해줘야 함
         String key = "who";
         String value = "hello-world";
 
-        long expiredTime = 60 * 1000; // 1분
-        redisService.setRedisTemplate(key, value, expiredTime);
+//        long expiredTime = 60 * 1000; // 1분
+
+//        LocalDateTime currentDateTime = LocalDateTime.now();
+
+        redisService.setRedisTemplate(key, value, new Date());
     }
 
     @Test

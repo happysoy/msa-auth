@@ -27,7 +27,7 @@ public class AdminController {
 
     // TODO 페이징으로 처리하기
     @GetMapping("/users")
-    public DataResponse<List<UserInfoResponse>> getMemberList() { // TODO <LIST<UserInfoResponse>>를 UserListResponse 레코드로 못바꾸나?
+    public DataResponse<List<UserInfoResponse>> getMemberList() { // TODO <LIST<UserInfoResponse>>를 UserListResponse 레코드로 변경
         return responseService.getResultResponse(userService.getUserList());
     }
 

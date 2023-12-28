@@ -12,7 +12,7 @@ import java.security.SecureRandom;
 public class PasswordEncoder {
 
     // Salt 값 생성
-    public static String getSalt() {
+    public String getSalt() {
 
         // random 하게 salt 생성
         SecureRandom random = new SecureRandom();
@@ -25,7 +25,7 @@ public class PasswordEncoder {
         return bytesToString(salt);
     }
 
-    private static String bytesToString(byte[] bytes) {
+    private String bytesToString(byte[] bytes) {
         StringBuilder buffer = new StringBuilder();
         for (byte b : bytes) {
             buffer.append(String.format("%02x", b));
@@ -34,7 +34,7 @@ public class PasswordEncoder {
     }
 
     // SHA-256 알고리즘으로 비밀번호 암호화
-    public static String getEncryption(String salt, String password) {
+    public String getEncryption(String salt, String password) {
         String original = salt + password;
 
         try {
@@ -48,7 +48,7 @@ public class PasswordEncoder {
 
     }
 
-    public static Boolean isSameCheck(String savedPassword, String requestPassword, String userSalt) {
+    public Boolean isSameCheck(String savedPassword, String requestPassword, String userSalt) {
         return getEncryption(userSalt, requestPassword).equals(savedPassword);
     }
 }

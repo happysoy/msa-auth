@@ -30,14 +30,12 @@ public class UserController {
     /**
      * 회원가입
      */
-    // TODO FormData 보다 application/json이 많이 사용됨. ajax 통해서 application/json으로  변경
     @PostMapping("/join") //@RequestBody -> json 통해 받아온 정보
     public DataResponse<JoinRequest> joinPost(@Validated @RequestBody JoinRequest request, Errors errors) {
         if (errors.hasErrors()){ // 회원가입 시 에러가 발생하는 경우 (ex. 폼 미작성, 이메일 형식 미준수)
             ExceptionStatusProvider.throwError(errors);
         }
         return responseService.getResultResponse(userService.join(request));
-
     }
 
 
@@ -82,7 +80,7 @@ public class UserController {
         return responseService.getSuccessResponse();
     }
 
-    @PostMapping("password-check")
+    @PostMapping("/password-check")
     public CodeMessageResponse pwCheckPost(@Validated @RequestBody PwChangeRequest request, Errors errors) {
         if (errors.hasErrors()) {
             ExceptionStatusProvider.throwError(errors);
@@ -93,7 +91,7 @@ public class UserController {
         return responseService.getSuccessResponse();
     }
 
-    @PostMapping("password-change")
+    @PostMapping("/password-change")
     public CodeMessageResponse pwChangePost(@Validated @RequestBody PwChangeRequest request, Errors errors) {
         if (errors.hasErrors()) {
             ExceptionStatusProvider.throwError(errors);

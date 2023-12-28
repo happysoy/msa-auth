@@ -31,6 +31,7 @@ public class TestDataInit {
     static class InitService{
 
         private final EntityManager em;
+        PasswordEncoder passwordEncoder = new PasswordEncoder();
 
         public void dbInitAdmin() {
             extracted("a", "a", "관리자", Role.ADMIN);
@@ -48,8 +49,8 @@ public class TestDataInit {
 
         private void extracted(String email, String password, String username, Role role) {
 
-            String salt = PasswordEncoder.getSalt(); // TODO 싱글톤 관리 -> PasswordEncoder 위에서 하나의 인스턴스로 선언해야 하지 않나??
-            String digest = PasswordEncoder.getEncryption(salt, password);
+            String salt = passwordEncoder.getSalt(); // TODO 싱글톤 관리 -> PasswordEncoder 위에서 하나의 인스턴스로 선언해야 하지 않나??
+            String digest = passwordEncoder.getEncryption(salt, password);
             SaltPassword saltPassword = new SaltPassword();
             saltPassword.setSalt(salt);
 

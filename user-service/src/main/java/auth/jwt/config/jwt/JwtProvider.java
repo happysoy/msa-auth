@@ -45,7 +45,6 @@ public class JwtProvider {
         Date now = new Date();
 
         return Jwts.builder()
-//                .setHeaderParam("algorithm-type", "jwt")
                 .setClaims(claims)
                 .setIssuedAt(now) // 토큰 생성 시간
                 .setExpiration(getExpireDateAccessToken(ACCESS_TOKEN_TIME)) // 토큰 만료 시간
@@ -86,6 +85,16 @@ public class JwtProvider {
     }
 
 
+
+    // 만료시간 추출
+    public Date getExpirationDate(String token){
+        return Jwts.parserBuilder()
+                .setSigningKey(key)
+                .build()
+                .parseClaimsJws(token)
+                .getBody()
+                .getExpiration();
+    }
 
 
 }

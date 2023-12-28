@@ -19,6 +19,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 @Slf4j
@@ -32,7 +34,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final JwtProvider jwtProvider;
     private final RedisService redisService;
-//    SaltPassword saltPassword = new SaltPassword();
+    PasswordEncoder passwordEncoder = new PasswordEncoder();
 
     /**
      * 회원가입
@@ -50,16 +52,13 @@ public class UserService {
             throw new GlobalException(ExceptionStatus.DUPLICATE_EMAIL);
         }
 
-        // 비밀번호 암호화
-        // 이 로직을 User 클래스가 아닌 서비스 계층에서 처리
+        // 비밀번호 암호화 로직을 User 클래스가 아닌 서비스 계층에서 처리
         // 1. User 클래스 단일 책임 원칙
         // 2. Test의 용이성 -> 클래스를 테스트할 때, 만약 서비스에서 처리하면 테스트마다 패스워드를 해싱해야 함
-        String salt = PasswordEncoder.getSalt(); // TODO 싱글톤 관리 -> PasswordEncoder 위에서 하나의 인스턴스로 선언해야 하지 않나??
-        String digest = PasswordEncoder.getEncryption(salt, request.getPassword());
+        String salt = passwordEncoder.getSalt(); // TODO 싱글톤 관리 -> PasswordEncoder 위에서 하나의 인스턴스로 선언해야 하지 않나??
+        String digest = passwordEncoder.getEncryption(salt, request.getPassword());
         request.setPassword(digest); // 해싱된 비밀번호로 변경하기 위해 JoinRequestDTO는 class로 설계
 
-        // TODO 로직 분리
-        // TODO static을 빼야할걸?
         // SaltPassword 정보 생성
         SaltPassword saltPassword = new SaltPassword();
         saltPassword.setSalt(salt);
@@ -70,15 +69,14 @@ public class UserService {
         // JPA 설정(email column unique=true)을 통해 동일 이메일에 대한 회원가입 요청 처리
         userRepository.save(user);
 
-        // TODO 반환을 해줘야 할까?
         return request;
     }
+
 
     /**
      * 로그인
      * Redis 에 refreshToken 저장
      */
-
     @Transactional
     public LoginResponse login(LoginRequest request) {
         // DB 에서 클라이언트 조회
@@ -87,16 +85,17 @@ public class UserService {
         String salt = user.getSaltPassword().getSalt();
 
         // 클라이언트 인증
-        if (!PasswordEncoder.isSameCheck(user.getPassword(), request.password(), salt)){
+        if (!passwordEncoder.isSameCheck(user.getPassword(), request.password(), salt)){
             throw new GlobalException(ExceptionStatus.FAIL_LOGIN);
         }
 
+        // TODO 로그아웃 된 토큰인지 확인(blacklist에 있는지)
         String refreshToken = jwtProvider.createRefreshToken(request.email());
 
         // redis 에 저장
         // key: email, value: refreshToken -> refresh token 이 있는지 찾기 위해서 모든 값들을 다 확인해야 한다
         // key: refreshToken, value: email -> 시간복잡도 (O(1))
-        redisService.setRedisTemplate(refreshToken, user.getEmail(), 3); // TTL 기능을 통해 유효시간 설정 -> 3일
+        redisService.setRedisTemplate(refreshToken, user.getEmail(), new Date()); // TTL 기능을 통해 유효시간 설정 -> 3일
 
         return LoginResponse.builder()
                 .accessToken(jwtProvider.createAccessToken(user.getEmail(), user.getRole()))
@@ -121,9 +120,7 @@ public class UserService {
         }
 
         // access token 유효시간과 함께 BlackList에 저장
-        redisService.setRedisTemplate(accessToken, "logout", 3); // TTL 기능을 통해 유효시간 설정 -> 3일
-
-
+        redisService.setRedisTemplate(accessToken, "logout", jwtProvider.getExpirationDate(accessToken)); // TTL 기능을 통해 유효시간 설정 -> 3일
     }
 
     /**
@@ -154,7 +151,6 @@ public class UserService {
 
         // accessToken 에서 이메일 추출
         String email = jwtProvider.getEmailByToken(accessToken);
-        log.info("email={}", email);
 
         // 회원가입 하지 않은 회원 처리
         User user = userRepository.findByEmail(email).orElseThrow(() -> new GlobalException(ExceptionStatus.EMPTY_USER));
@@ -165,9 +161,6 @@ public class UserService {
             throw new GlobalException(ExceptionStatus.INVALID_TOKEN);
         }
 
-        // TODO 클라이언트가 요청한 access token이 Blacklist에 등록되었는지 Redis를 조회하여 확인하는 코드를 추가
-        // 만약 true 라면 에러 반환
-
         // accessToken 재발급
         return LoginResponse.builder()
                 .accessToken(jwtProvider.createAccessToken(email, user.getRole()))
@@ -177,17 +170,7 @@ public class UserService {
 
 
     /**
-     *  TODO 유저 리스트 조회 -> 페이징
-     */
-//    public MemberListResponse getMemberList() {
-//        // 페이징 처리
-//
-//    }
-
-
-
-    /**
-     * 전체 유저 조회
+     * 전체 유저 조회 TODO 유저 리스트 조회 -> 페이징
      */
     public List<UserInfoResponse> getUserList() {
         return userRepository.findAllByRole(Role.USER);
@@ -209,7 +192,7 @@ public class UserService {
         String salt = user.getSaltPassword().getSalt();
 
         // 클라이언트 인증
-        if (!PasswordEncoder.isSameCheck(user.getPassword(), request.password(), salt)){
+        if (!passwordEncoder.isSameCheck(user.getPassword(), request.password(), salt)){
             throw new GlobalException(ExceptionStatus.FAIL_PW_CHECK);
         }
 
@@ -229,8 +212,8 @@ public class UserService {
         User user = userRepository.findByEmail(email).orElseThrow(() -> new GlobalException(ExceptionStatus.EMPTY_USER));
 
         // salt 값 새로 생성
-        String salt = PasswordEncoder.getSalt();
-        String digest = PasswordEncoder.getEncryption(salt, request.password());
+        String salt = passwordEncoder.getSalt();
+        String digest = passwordEncoder.getEncryption(salt, request.password());
 
         SaltPassword saltPassword = user.getSaltPassword();
         saltPassword.setSalt(salt);
