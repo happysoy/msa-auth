@@ -13,7 +13,6 @@ public class SaltPassword {
     @Column(name="salt_password_id")
     private Long id;
 
-    // TODO -> JsonIgnore?
     @OneToOne(mappedBy = "saltPassword", fetch = FetchType.LAZY)
     private User user;
 
@@ -21,11 +20,4 @@ public class SaltPassword {
     @Column(nullable = false)
     private String salt;
 
-    /**
-     * 비즈니스 로직
-     */
-    //Salt 값 생성
-//    public static String createSalt() {
-//        return PasswordEncoder.getSalt();
-//    }
 }

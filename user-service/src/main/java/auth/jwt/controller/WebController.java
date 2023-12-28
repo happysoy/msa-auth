@@ -34,4 +34,14 @@ public class WebController {
     public String adminGet() {
         return "admin";
     }
+
+    @GetMapping("/password-check")
+    public String pwCheckGet() {
+        return "passwordCheck";
+    }
+
+    @GetMapping("/password-change")
+    public String pwChangeGet() {
+        return "passwordChange";
+    }
 }

@@ -85,22 +85,7 @@ public class JwtProvider {
         return new Date(System.currentTimeMillis() + expireTimeMils);
     }
 
-    // 토큰의 유효성 + 만료일자 확인
-    public boolean validateToken(String token) {
-        try {
 
-            Claims claims = Jwts.parserBuilder()
-                    .setSigningKey(key)
-                    .build()
-                    .parseClaimsJws(token)
-                    .getBody();
-
-            return !claims.getExpiration().before(new Date());
-
-        } catch (Exception e) {
-            return false;
-        }
-    }
 
 
 }

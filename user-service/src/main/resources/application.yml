@@ -11,7 +11,7 @@ spring:
     resources:
       static-locations: classpath:/css, classpath:/js
   datasource:
-    url: jdbc:h2:mem:local;MODE=MySQL;DATABASE_TO_LOWER=TRUE  #테스트 환경에서는 h2 사용
+    url: jdbc:h2:mem:local;MODE=MySQL;DATABASE_TO_LOWER=TRUE
     username: sa
     password:
     driver-class-name: org.h2.Driver
@@ -50,17 +50,17 @@ eureka:
   instance:
     instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
 
-#springdoc:
-#  api-docs:
-#    path: /openapi/${spring.application.name}
-#  #  packages-to-scan: com.colabear754.springdoc_example.controllers
-#  default-consumes-media-type: application/json;charset=UTF-8
-#  default-produces-media-type: application/json;charset=UTF-8
-#  swagger-ui:
-#    path: /
-#    disable-swagger-default-url: true
-#    display-request-duration: true
-#    operations-sorter: alpha
+springdoc:
+  api-docs:
+    path: /openapi/${spring.application.name}
+  #  packages-to-scan: com.colabear754.springdoc_example.controllers
+  default-consumes-media-type: application/json;charset=UTF-8
+  default-produces-media-type: application/json;charset=UTF-8
+  swagger-ui:
+    path: /
+    disable-swagger-default-url: true
+    display-request-duration: true
+    operations-sorter: alpha
 
 
 

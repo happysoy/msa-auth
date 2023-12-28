@@ -10,7 +10,7 @@
 //
 //    @Bean
 //    public GroupedOpenApi publicApi() {
-//        // pathsToMatch로 원하는 경로의 api만 나오도록 설정
+//        // pathsToMatch 로 원하는 경로의 api 만 나오도록 설정
 //        return GroupedOpenApi.builder()
 //                .group("v1")
 //                .pathsToMatch("/v1/**")

@@ -38,6 +38,7 @@ public enum ExceptionStatus {
     RESPONSE_ERROR(false, 2200, "값을 불러오는데 실패하였습니다."),
     FAIL_PASSWORD_CHECK(false, 2001, "비밀번호와 비밀번호 확인이 일치하지 않습니다"),
     FAIL_LOGIN(false, 2202, "아이디 또는 비밀번호를 확인해주세요"),
+    FAIL_PW_CHECK(false, 2202, "비밀번호가 올바르지 않습니다"),
     DUPLICATE_EMAIL(false, 2203, "중복된 이메일입니다"),
     EMPTY_USER(false, 2204, "존재하지 않는 사용자입니다"),
     ENCRYPT_ERROR(false, 2100, "암호화 알고리즘을 적용하지 못했습니다");

@@ -51,6 +51,13 @@
             <div class="col">
                 <button class="w-100 btn btn-primary btn-lg" type="button" id="logoutBtn">로그아웃</button>
             </div>
+
+            <div class="col">
+                <button class="w-100 btn btn-secondary btn-lg" type="button"
+                        th:onclick="|location.href='@{/user-service/password-check}'|"
+                >비밀번호 변경</button>
+            </div>
+        </div>
         </div>
 
 
@@ -103,7 +110,7 @@
                 },
                 error: function (err) {
                     alert("토큰이 유효하지 않습니다");
-                    window.location.href="/user-service/login"; // TODO 여기로 가기전에 컨트롤러에서 막기
+                    window.location.href="/user-service/login";
                 }
 
             })
@@ -122,14 +129,16 @@
                 success: function () {
                     alert("로그아웃 되었습니다");
                     sessionStorage.removeItem("ACCESS_TOKEN");
+                    sessionStorage.removeItem("REFRESH_TOKEN");
                     window.location.replace("/user-service/login");
                 },
                 error: function (err) {
-                    alert("각각에 대해 처리하기");
+                    alert("BlackList 저장에 실패했습니다");
                 },
             });
 
         });
+
 
 
     });

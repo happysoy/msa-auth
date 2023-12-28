@@ -2,6 +2,7 @@ package auth.jwt.controller;
 
 import auth.jwt.dto.request.JoinRequest;
 import auth.jwt.dto.request.LoginRequest;
+import auth.jwt.dto.request.PwChangeRequest;
 import auth.jwt.dto.request.TokenRefreshRequest;
 import auth.jwt.dto.response.CodeMessageResponse;
 import auth.jwt.dto.response.DataResponse;
@@ -81,5 +82,25 @@ public class UserController {
         return responseService.getSuccessResponse();
     }
 
+    @PostMapping("password-check")
+    public CodeMessageResponse pwCheckPost(@Validated @RequestBody PwChangeRequest request, Errors errors) {
+        if (errors.hasErrors()) {
+            ExceptionStatusProvider.throwError(errors);
+        }
+        log.info("야호={}", request);
+        userService.pwCheck(request);
+
+        return responseService.getSuccessResponse();
+    }
+
+    @PostMapping("password-change")
+    public CodeMessageResponse pwChangePost(@Validated @RequestBody PwChangeRequest request, Errors errors) {
+        if (errors.hasErrors()) {
+            ExceptionStatusProvider.throwError(errors);
+        }
+        userService.pwChange(request);
+
+        return responseService.getSuccessResponse();
+    }
 
 }

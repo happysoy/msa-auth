@@ -6,6 +6,7 @@ import auth.jwt.domain.user.Role;
 import auth.jwt.domain.user.SaltPassword;
 import auth.jwt.dto.request.JoinRequest;
 import auth.jwt.dto.request.LoginRequest;
+import auth.jwt.dto.request.PwChangeRequest;
 import auth.jwt.dto.request.TokenRefreshRequest;
 import auth.jwt.dto.response.LoginResponse;
 import auth.jwt.dto.response.UserInfoResponse;
@@ -18,7 +19,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.Duration;
 import java.util.List;
 
 @Slf4j
@@ -114,13 +114,6 @@ public class UserService {
         // access token 유효성 검증
         String accessToken = request.accessToken();
 
-//        if (!jwtProvider.validateToken(accessToken)){
-//            throw new GlobalException(ExceptionStatus.INVALID_TOKEN);
-//        }
-
-        String email = jwtProvider.getEmailByToken(accessToken);
-
-
         String redisKey = request.refreshToken();
         // refresh token 삭제
         if (redisService.getRedisTemplateValue(redisKey) != null) {
@@ -172,6 +165,9 @@ public class UserService {
             throw new GlobalException(ExceptionStatus.INVALID_TOKEN);
         }
 
+        // TODO 클라이언트가 요청한 access token이 Blacklist에 등록되었는지 Redis를 조회하여 확인하는 코드를 추가
+        // 만약 true 라면 에러 반환
+
         // accessToken 재발급
         return LoginResponse.builder()
                 .accessToken(jwtProvider.createAccessToken(email, user.getRole()))
@@ -181,7 +177,7 @@ public class UserService {
 
 
     /**
-     * 유저 리스트 조회
+     *  TODO 유저 리스트 조회 -> 페이징
      */
 //    public MemberListResponse getMemberList() {
 //        // 페이징 처리
@@ -189,18 +185,61 @@ public class UserService {
 //    }
 
 
-    /**
-     * 유저 수 반환
-     */
-    public Long countRoleUser(Role role) {
-        return userRepository.countByRole(role);
-    }
 
     /**
      * 전체 유저 조회
      */
     public List<UserInfoResponse> getUserList() {
         return userRepository.findAllByRole(Role.USER);
+    }
+
+
+    public void pwCheck(PwChangeRequest request) {
+        String accessToken = request.accessToken();
+
+        if (accessToken.equals("null")) { // String 으로 받아와서 "null"이라고 해줘야 한다
+            throw new GlobalException(ExceptionStatus.EMPTY_ACCESS_TOKEN);
+        }
+
+        String email = jwtProvider.getEmailByToken(accessToken);
+
+        // DB 에서 클라이언트 조회
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new GlobalException(ExceptionStatus.EMPTY_USER));
+
+        String salt = user.getSaltPassword().getSalt();
+
+        // 클라이언트 인증
+        if (!PasswordEncoder.isSameCheck(user.getPassword(), request.password(), salt)){
+            throw new GlobalException(ExceptionStatus.FAIL_PW_CHECK);
+        }
+
+
+    }
+
+
+    @Transactional
+    public void pwChange(PwChangeRequest request) {
+        String accessToken = request.accessToken();
+
+        if (accessToken.equals("null")) { // String 으로 받아와서 "null"이라고 해줘야 한다
+            throw new GlobalException(ExceptionStatus.EMPTY_ACCESS_TOKEN);
+        }
+
+        String email = jwtProvider.getEmailByToken(accessToken);
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new GlobalException(ExceptionStatus.EMPTY_USER));
+
+        // salt 값 새로 생성
+        String salt = PasswordEncoder.getSalt();
+        String digest = PasswordEncoder.getEncryption(salt, request.password());
+
+        SaltPassword saltPassword = user.getSaltPassword();
+        saltPassword.setSalt(salt);
+
+        user.setSaltPassword(saltPassword);
+        user.setPassword(digest);
+
+
+        userRepository.save(user);
     }
 
 }
