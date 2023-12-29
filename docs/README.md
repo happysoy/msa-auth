@@ -1,10 +1,16 @@
 # Spring Security 없이 MSA 환경에서 JWT 기반 인증/인가 
 
 
-## 개발환경
+## 기술
 
-- Spring Boot 3.2.0
-- Java17
+| category  | name                                                                                                                                                                                                                                                                                                                                                   |
+|-----------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| language  | ![Java](https://img.shields.io/badge/java17-%23ED8B00.svg?style=for-the-badge&logo=openjdk&logoColor=white) ![JavaScript](https://img.shields.io/badge/javascript-%23323330.svg?style=for-the-badge&logo=javascript&logoColor=%23F7DF1E)  ![jQuery](https://img.shields.io/badge/jquery-%230769AD.svg?style=for-the-badge&logo=jquery&logoColor=white) |
+| framework | <img src="https://img.shields.io/badge/springboot-6DB33F?style=for-the-badge&logo=springboot&logoColor=white">                                                                                                                                                                                                                                         
+| database  | ![MySQL](https://img.shields.io/badge/mysql-%2300f.svg?style=for-the-badge&logo=mysql&logoColor=white) ![Redis](https://img.shields.io/badge/redis-%23DD0031.svg?style=for-the-badge&logo=redis&logoColor=white)                                                                                                                                                                                                                                                |
+| devOps    | ![Docker](https://img.shields.io/badge/docker-%230db7ed.svg?style=for-the-badge&logo=docker&logoColor=white)                                                                                                                                                                                                                                                      |
+
+
 - MySQL → 회원 정보 저장
     - 회원정보 데이터는 정합성이 중요하므로 RDBMS의 MySQL을 사용하였다.
 - Redis → Refresh Token 저장
@@ -62,3 +68,5 @@ secret key는 환경변수에 저장하고 관리하였다.
 - 토큰을 발급하는 user-service와 토큰을 검증하는 api-gateway의 환경변수에 같은 secret key를 저장하였다.
 - user-service에서는 HS512(HMAC using SHA-512) 알고리즘을 사용하여 Signature(header+payload+secret)를 암호화하였다.
 - api-gateway에서는 user-service와 같은 방식으로 환경변수에 저장된 평문 secret key를 Base64로 인코딩하고 hmacShaKeyFor을 써서 Secret key 객체로 반환하였다.
+
+
