@@ -37,14 +37,13 @@ public class RoleAdminFilter extends AbstractGatewayFilterFactory<RoleAdminFilte
     public GatewayFilter apply(NameConfig config) {
         return ((exchange, chain) -> {
             ServerHttpRequest request = exchange.getRequest();
-
             List<String> authHeader = request.getHeaders().get(ACCESS_TOKEN);
 
-            log.info("Role admin filter");
-
-            if (Objects.isNull(authHeader)) {
+            if (Objects.isNull(authHeader) || Objects.equals(authHeader.get(0), "null")) {
                 return onError(exchange, "액세스 토큰이 없습니다");
             }
+
+
             String token = authHeader.get(0);
 
             if (!jwtUtils.getRoleByToken(token).equals("ADMIN"))
