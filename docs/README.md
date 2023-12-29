@@ -23,7 +23,8 @@
     - API Gateway에서 JWT 검증
         - Access Token을 검증하고 Micro Service로 클라이언트의 요청을 전송한다.
   
----
+
+
 
 ## API 명세서
 | Method | URI | Description |
@@ -40,6 +41,8 @@
 | GET | /user-service/token/profile | 회원 정보 페이지 요청 |
 | GET | /user-service/token/access-refresh | Access Token Refresh 요청 |
 | GET | /user-service/admin/users | 관리자 전체 회원 조회 요청 |
+
+
 
 
 ## 인증 플로우
@@ -65,6 +68,8 @@
     2. 서버 단에서는 Refresh Token을 즉시 삭제하고, Access Token을 블랙리스트에 보내 해당 토큰을 무효화하는 작업을 진행한다. 서버가 해당 토큰을 무효화하는 과정이 없이 세션 스토리지에 저장된 토큰만 삭제하면 클라이언트가 토큰을 미리 카피한 경우 계속해서 서버에 요청을 보낼 수 있기 때문이다.
 
 
+
+
 ## 암호화
 ### 1. 비밀번호 암호화
 클라이언트의 비밀번호를 SHA-256 알고리즘으로 암호화하였다.
@@ -76,6 +81,9 @@
   - 클라이언트의 이메일을 DB에 조회해 salt 값과 digest 값을 가져온다. 클라이언트가 입력한 비밀번호와 salt 값을 합치고 SHA-256 알고리즘으로 암호화한 결과가 조회한 digest 값과 일치하는 지 검증한다. 
 - 비밀번호 변경
   - 클라이언트가 비밀번호를 변경하면 salt 값은 재사용하지 않고 함께 변경한다.
+
+
+
 
 ### 2. 토큰 암호화
 클라이언트의 토큰을 HS512 알고리즘으로 암호화하였다.
