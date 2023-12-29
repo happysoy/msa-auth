@@ -12,7 +12,6 @@
 
 
 - MySQL → 회원 정보 저장
-    - 회원정보 데이터는 정합성이 중요하므로 RDBMS의 MySQL을 사용하였다.
 - Redis → Refresh Token 저장
     - RDBMS를 사용하지 않은 이유
         - 만료시간이 지난 Refresh Token은 더미데이터가 된다. 이를 방지하기 위해서는 expires를 기준으로 CronJob을 실행해줘야 한다. `delete expires < 'now'`
@@ -42,7 +41,10 @@
 | GET | /user-service/token/access-refresh | Access Token Refresh 요청 |
 | GET | /user-service/admin/users | 관리자 전체 회원 조회 요청 |
 
-
+- 테스트 데이터
+  - 편의상 DB에 테스트용 회원 데이터를 추가하였다. https://github.com/happysoy/msa-auth/blob/2346dadc1b2b4ec48c0fdbd46a464df7881b0d77/user-service/src/main/java/auth/jwt/TestDataInit.java
+    - 관리자 email: "a", password: "a"
+    - 클라이언트 email: "q", password: "q"
 
 
 ## 인증 플로우
@@ -52,7 +54,7 @@
 2. 로그인을 통해 클라이언트가 인증되면 User Service는 Access Token과 Refresh Token을 발급하고 발급된 토큰은 API Gateway를 통해 클라이언트에게 전달된다.
     1. 서버는 Refresh Token을 Redis에 저장한다.
     2. 클라이언트는 Access Token과 Refresh Token을 세션 스토리지에 저장한다.
-        1. 세션스토리지에 저장하는 방식은 XSS 공격에 취약하므로 보안상 좋지 않지만, 클라이언트 단의 문제라고 생각하기 때문에 깊게 다루지 않았다.
+        1. 세션스토리지에 저장하는 방식은 XSS 공격에 취약하므로 보안상 좋지 않지만, 프론트엔드 영역이라고 생각하기 때문에 깊게 다루지 않았다.
 3. 클라이언트가 API 요청을 할 때마다 API Gateway는 클라이언트의 Header에 포함된 토큰을 확인하여 검증한 후 클라이언트가 요청한 Micro Service로 라우팅한다.
 4. 클라이언트의 **Access Token이 만료되면 Access Token만 재발급** 한다.
     1. Access Token이 만료 시, "Access Token 재발급" &&  "Refresh Token 재발급"하면
