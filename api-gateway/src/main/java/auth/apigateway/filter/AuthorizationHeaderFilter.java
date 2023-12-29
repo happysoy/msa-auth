@@ -38,27 +38,26 @@ public class AuthorizationHeaderFilter extends AbstractGatewayFilterFactory<Auth
             List<String> authHeader = request.getHeaders().get(ACCESS_TOKEN);
             log.info("AuthHeader Filter authHeader={}", authHeader);
 
-//            if (Objects.isNull(authHeader)) {
-//                return onError(exchange, "액세스 토큰이 없습니다");
-//            }
-//            String token = authHeader.get(0);
-//
-//
-//            try {
-//                String email = jwtUtils.getEmailByToken(token);
-//                log.info("인증 완료={}", email);
-//            } catch (ExpiredJwtException e) {
-//                return onError(exchange, "토큰이 만료되었습니다");
-//            }
-//            catch (IllegalArgumentException e) {
-//                return onError(exchange, "적합하지 않은 파라미터입니다");
-//            }
-//            catch (MalformedJwtException e) {
-//                return onError(exchange, "손상된 토큰입니다");
-//            } catch (UnsupportedJwtException e) {
-//                return onError(exchange, "지원하지 않는 토큰입니다");
-//            }
-//            return chain.filter(exchange);
+            if (Objects.isNull(authHeader)) {
+                return onError(exchange, "액세스 토큰이 없습니다");
+            }
+            String token = authHeader.get(0);
+
+
+            try {
+                String email = jwtUtils.getEmailByToken(token);
+                log.info("인증 완료={}", email);
+            } catch (ExpiredJwtException e) {
+                return onError(exchange, "토큰이 만료되었습니다");
+            }
+            catch (IllegalArgumentException e) {
+                return onError(exchange, "적합하지 않은 파라미터입니다");
+            }
+            catch (MalformedJwtException e) {
+                return onError(exchange, "손상된 토큰입니다");
+            } catch (UnsupportedJwtException e) {
+                return onError(exchange, "지원하지 않는 토큰입니다");
+            }
             return chain.filter(exchange).then(Mono.fromRunnable(()-> {
                 log.info("AuthorizationHeaderFilter: request id -> {}", response.getStatusCode());
             }));
