@@ -13,12 +13,8 @@ public class WebController {
 
     @GetMapping("/join")
     public String joinForm() {
-
-
-
         return "joinForm";
     }
-//    @ModelAttribute("joinForm") JoinRequest request 이거 안넘겨줘도 됨
 
     @GetMapping("/login")
     public String loginForm(@ModelAttribute("loginForm") LoginRequest request) {

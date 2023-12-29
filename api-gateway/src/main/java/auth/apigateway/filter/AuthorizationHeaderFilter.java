@@ -5,6 +5,7 @@ import io.jsonwebtoken.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpResponse;
@@ -33,31 +34,33 @@ public class AuthorizationHeaderFilter extends AbstractGatewayFilterFactory<Auth
     public GatewayFilter apply(NameConfig config) {
         return ((exchange, chain) -> {
             ServerHttpRequest request = exchange.getRequest();
-
+            ServerHttpResponse response = exchange.getResponse();
             List<String> authHeader = request.getHeaders().get(ACCESS_TOKEN);
+            log.info("AuthHeader Filter authHeader={}", authHeader);
 
-            if (Objects.isNull(authHeader)) {
-                return onError(exchange, "액세스 토큰이 없습니다");
-            }
-            String token = authHeader.get(0);
-
-
-            try {
-                String email = jwtUtils.getEmailByToken(token);
-                log.info("인증 완료={}", email);
-            } catch (ExpiredJwtException e) {
-                return onError(exchange, "토큰이 만료되었습니다");
-            }
-            catch (IllegalArgumentException e) {
-                return onError(exchange, "적합하지 않은 파라미터입니다");
-            }
-            catch (MalformedJwtException e) {
-                return onError(exchange, "손상된 토큰입니다");
-            } catch (UnsupportedJwtException e) {
-                return onError(exchange, "지원하지 않는 토큰입니다");
-            }
-            return chain.filter(exchange).then(Mono.fromRunnable(()->{
-
+//            if (Objects.isNull(authHeader)) {
+//                return onError(exchange, "액세스 토큰이 없습니다");
+//            }
+//            String token = authHeader.get(0);
+//
+//
+//            try {
+//                String email = jwtUtils.getEmailByToken(token);
+//                log.info("인증 완료={}", email);
+//            } catch (ExpiredJwtException e) {
+//                return onError(exchange, "토큰이 만료되었습니다");
+//            }
+//            catch (IllegalArgumentException e) {
+//                return onError(exchange, "적합하지 않은 파라미터입니다");
+//            }
+//            catch (MalformedJwtException e) {
+//                return onError(exchange, "손상된 토큰입니다");
+//            } catch (UnsupportedJwtException e) {
+//                return onError(exchange, "지원하지 않는 토큰입니다");
+//            }
+//            return chain.filter(exchange);
+            return chain.filter(exchange).then(Mono.fromRunnable(()-> {
+                log.info("AuthorizationHeaderFilter: request id -> {}", response.getStatusCode());
             }));
         });
     }

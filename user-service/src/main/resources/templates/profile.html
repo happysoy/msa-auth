@@ -45,9 +45,7 @@
         <div class="row">
 
             <div class="col">
-                <button class="w-100 btn btn-secondary btn-lg" type="button"
-                        th:onclick="|location.href='@{/user-service/password-check}'|"
-                >비밀번호 변경</button>
+                <button class="w-100 btn btn-secondary btn-lg" type="button" id="pwChangeBtn">비밀번호 변경</button>
             </div>
 
             <div class="col">
@@ -86,13 +84,12 @@
                 xhr.setRequestHeader("ACCESS_TOKEN", sessionStorage.getItem("ACCESS_TOKEN"));
             },
             success: function (data) {
-                console.log(data);
                 document.getElementById("email").textContent = data.result["email"];
                 document.getElementsByClassName("username")[0].textContent = data.result["username"];
                 document.getElementsByClassName("username")[1].textContent = data.result["username"];
 
             },
-            error: function (err) {
+            error: function () {
                 refresh();
             },
 
@@ -114,7 +111,7 @@
                     sessionStorage.setItem("ACCESS_TOKEN", data.result['accessToken']);
                     sessionStorage.setItem("REFRESH_TOKEN", data.result["refreshToken"]);
                 },
-                error: function (err) {
+                error: function (e) {
                     alert("토큰이 유효하지 않습니다");
                     window.location.href="/user-service/login";
                 }
@@ -138,16 +135,18 @@
                     sessionStorage.removeItem("REFRESH_TOKEN");
                     window.location.replace("/user-service/login");
                 },
-                error: function (err) {
+                error: function () {
                     alert("BlackList 저장에 실패했습니다");
                 },
             });
 
         });
 
-
-
+        document.querySelector('#pwChangeBtn').onclick = function() {
+            window.location.replace("/user-service/password-check");
+        }
     });
+
 </script>
 
 </html>

@@ -64,33 +64,11 @@
 
             },
             error: function () {
-                refresh();
+                alert("접근 권한이 없습니다");
+                history.back();
             },
 
         });
-        function refresh() {
-            let params={
-                accessToken: sessionStorage.getItem("ACCESS_TOKEN"),
-                refreshToken: sessionStorage.getItem("REFRESH_TOKEN")
-            }
-            $.ajax({
-                type:"POST",
-                url: "/user-service/token/access-refresh",
-                contentType:'application/json',
-                data: JSON.stringify(params),
-                success: function (data) {
-                    alert("토큰이 (재)발급 되었습니다");
-                    sessionStorage.setItem("ACCESS_TOKEN", data.result['accessToken']);
-                    sessionStorage.setItem("REFRESH_TOKEN", data["refreshToken"]);
-                },
-                error: function () {
-                    alert("접근 권한이 없습니다");
-                    window.location.href="/user-service/profile";
-                }
-
-            })
-        }
-
 
     });
     document.querySelector('#back').onclick = function() {

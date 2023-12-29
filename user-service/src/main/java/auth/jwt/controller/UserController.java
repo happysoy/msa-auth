@@ -85,7 +85,6 @@ public class UserController {
         if (errors.hasErrors()) {
             ExceptionStatusProvider.throwError(errors);
         }
-        log.info("야호={}", request);
         userService.pwCheck(request);
 
         return responseService.getSuccessResponse();

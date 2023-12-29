@@ -40,6 +40,8 @@ public class RoleAdminFilter extends AbstractGatewayFilterFactory<RoleAdminFilte
 
             List<String> authHeader = request.getHeaders().get(ACCESS_TOKEN);
 
+            log.info("Role admin filter");
+
             if (Objects.isNull(authHeader)) {
                 return onError(exchange, "액세스 토큰이 없습니다");
             }
