@@ -46,7 +46,7 @@
   - 편의상 DB에 테스트용 회원 데이터를 추가하였다. https://github.com/happysoy/msa-auth/blob/2346dadc1b2b4ec48c0fdbd46a464df7881b0d77/user-service/src/main/java/auth/jwt/TestDataInit.java
     - 관리자 email: "a", password: "a"
     - 클라이언트 email: "q", password: "q"
-
+- API Gateway의 port는 8080으로 지정하였다. 
 
 ## 인증 플로우
 ![img.png](img.png)
