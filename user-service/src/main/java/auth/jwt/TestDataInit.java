@@ -49,7 +49,7 @@ public class TestDataInit {
 
         private void extracted(String email, String password, String username, Role role) {
 
-            String salt = passwordEncoder.getSalt(); // TODO 싱글톤 관리 -> PasswordEncoder 위에서 하나의 인스턴스로 선언해야 하지 않나??
+            String salt = passwordEncoder.getSalt();
             String digest = passwordEncoder.getEncryption(salt, password);
             SaltPassword saltPassword = new SaltPassword();
             saltPassword.setSalt(salt);

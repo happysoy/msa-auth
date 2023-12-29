@@ -55,7 +55,7 @@ public class UserService {
         // 비밀번호 암호화 로직을 User 클래스가 아닌 서비스 계층에서 처리
         // 1. User 클래스 단일 책임 원칙
         // 2. Test의 용이성 -> 클래스를 테스트할 때, 만약 서비스에서 처리하면 테스트마다 패스워드를 해싱해야 함
-        String salt = passwordEncoder.getSalt(); // TODO 싱글톤 관리 -> PasswordEncoder 위에서 하나의 인스턴스로 선언해야 하지 않나??
+        String salt = passwordEncoder.getSalt();
         String digest = passwordEncoder.getEncryption(salt, request.getPassword());
         request.setPassword(digest); // 해싱된 비밀번호로 변경하기 위해 JoinRequestDTO는 class로 설계
 
@@ -137,7 +137,7 @@ public class UserService {
 
         User user = userRepository.findByEmail(email).orElseThrow(() -> new GlobalException(ExceptionStatus.EMPTY_USER));
 
-        return new UserInfoResponse(user.getEmail(), user.getUsername()); // TODO 왜 new 메소드를 안붙이면 에러가 날까?
+        return new UserInfoResponse(user.getEmail(), user.getUsername());
     }
 
 
