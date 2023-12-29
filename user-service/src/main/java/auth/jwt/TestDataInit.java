@@ -35,8 +35,6 @@ public class TestDataInit {
 
         public void dbInitAdmin() {
             extracted("a", "a", "관리자", Role.ADMIN);
-
-
         }
 
         public void dbInitUsers() {
@@ -44,7 +42,6 @@ public class TestDataInit {
             extracted("w", "w", "신짱아", Role.USER);
             extracted("e", "e", "봉미선", Role.USER);
             extracted("r", "r", "신형만", Role.USER);
-
         }
 
         private void extracted(String email, String password, String username, Role role) {
