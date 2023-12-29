@@ -34,9 +34,7 @@ public class AuthorizationHeaderFilter extends AbstractGatewayFilterFactory<Auth
     public GatewayFilter apply(NameConfig config) {
         return ((exchange, chain) -> {
             ServerHttpRequest request = exchange.getRequest();
-            ServerHttpResponse response = exchange.getResponse();
             List<String> authHeader = request.getHeaders().get(ACCESS_TOKEN);
-            log.info("AuthHeader Filter authHeader={}", authHeader);
 
             if (Objects.isNull(authHeader)) {
                 return onError(exchange, "액세스 토큰이 없습니다");
@@ -59,7 +57,6 @@ public class AuthorizationHeaderFilter extends AbstractGatewayFilterFactory<Auth
                 return onError(exchange, "지원하지 않는 토큰입니다");
             }
             return chain.filter(exchange).then(Mono.fromRunnable(()-> {
-                log.info("AuthorizationHeaderFilter: request id -> {}", response.getStatusCode());
             }));
         });
     }
