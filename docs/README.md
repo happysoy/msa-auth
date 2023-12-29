@@ -27,20 +27,20 @@
 
 ## API 명세서
 
-| Method | URI | Description |
-| --- | --- | --- |
-| GET | /user-service/join | 회원가입 페이지 |
-| GET | /user-servcie/login | 로그인 페이지 |
-| GET | /user-service/profile | 회원 정보 페이지 |
-| GET | /user-service/admin | 관리자 페이지 |
-| GET | /user-service/password-change | 비밀번호 변경 페이지 |
-| POST | /user-service/join | 회원가입 요청 |
-| POST | /user-service/login | 로그인 요청 |
-| POST | /user-service/logout | 로그아웃 요청 |
-| POST | /user-service/password-change | 비밀번호 변경 요청 |
+| Method | URI | Description             |
+| --- | --- |-------------------------|
+| GET | /user-service/join | 회원가입 페이지                |
+| GET | /user-servcie/login | 로그인 페이지                 |
+| GET | /user-service/profile | 회원 정보 페이지               |
+| GET | /user-service/admin | 관리자 페이지                 |
+| GET | /user-service/password-change | 비밀번호 변경 페이지             |
+| POST | /user-service/join | 회원가입 요청                 |
+| POST | /user-service/login | 로그인 요청                  |
+| POST | /user-service/logout | 로그아웃 요청                 |
+| POST | /user-service/password-change | 비밀번호 변경 요청              |
 | POST | /user-service/token/access-refresh | Access Token Refresh 요청 |
-| GET | /user-service/token/profile | 회원 정보 조회 요청 |
-| GET | /user-service/admin/users | 관리자 전체 회원 조회 요청 |
+| GET | /user-service/token/profile | 회원 정보 조회 요청             |
+| GET | /user-service/admin/users | 전체 회원 조회 요청(관리자용)       |
 
 - 테스트 데이터
   - 편의상 DB에 테스트용 회원 데이터를 추가하였다. https://github.com/happysoy/msa-auth/blob/2346dadc1b2b4ec48c0fdbd46a464df7881b0d77/user-service/src/main/java/auth/jwt/TestDataInit.java
@@ -58,8 +58,8 @@
         1. 세션스토리지에 저장하는 방식은 XSS 공격에 취약하므로 보안상 좋지 않지만, 프론트엔드 영역이라고 생각하기 때문에 깊게 다루지 않았다.
 3. 클라이언트가 API 요청을 할 때마다 API Gateway는 클라이언트의 Header에 포함된 토큰을 확인하여 검증한 후 클라이언트가 요청한 Micro Service로 라우팅한다.
 4. 클라이언트의 **Access Token이 만료되면 Access Token만 재발급** 한다.
-    1. Access Token이 만료 시, "Access Token 재발급" &&  "Refresh Token 재발급"하면
-        1. Refresh Token을 발급한 의미가 없어지는 것이다. 예컨대, Refresh Token의 유효시간을 3일로 설정했다면 이 기간동안 유효하게 사용하도록 하기 위한 용도이다. 그런데 Access Token의 유효시간(30분)마다 재발급한다면 유효시간을 설정한 의미가 없어진다.
+    1. Access Token이 만료 시, "Access Token 재발급" &&  "Refresh Token 재발급"이면
+        1. Refresh Token을 발급한 의미가 없어지는 것이다. Refresh Token의 유효시간을 3일로 설정했다면 이 기간동안 유효하게 사용하도록 하기 위한 용도이다. 그런데 Access Token의 유효시간(30분)마다 재발급한다면 유효시간을 설정한 의미가 없어진다.
         2. 또한 Access Token이 한번 공격자에 의해 탈취당하면 공격자는 영구적으로 서비스에 접근할 수 있게 된다.
     2. Access Token이 만료 시, "Access Token ≠ 재발급" && "Refesh Token ≠ 재발급"이면
         1. 클라이언트가 자주 로그인을 해야한다는 불편함이 생긴다.
