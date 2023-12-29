@@ -1,6 +1,5 @@
 server:
-#  port: 0 #랜덤포트 이용
-  port: 18080
+  port: 0 #랜덤포트 이용
   tomcat:
     uri-encoding: UTF-8
 
