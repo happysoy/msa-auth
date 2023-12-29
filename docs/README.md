@@ -25,6 +25,23 @@
   
 ---
 
+## API 명세서
+| Method | URI | Description |
+| --- | --- | --- |
+| GET | /user-service/join | 회원가입 페이지 |
+| GET | /user-servcie/login | 로그인 페이지 |
+| GET | /user-service/profile | 회원 정보 페이지 |
+| GET | /user-service/admin | 관리자 페이지 |
+| GET | /user-service/password-change | 비밀번호 변경 페이지 |
+| POST | /user-service/join | 회원가입 요청 |
+| POST | /user-service/login | 로그인 요청 |
+| POST | /user-service/logout | 로그아웃 요청 |
+| POST | /user-service/password-change | 비밀번호 변경 요청 |
+| GET | /user-service/token/profile | 회원 정보 페이지 요청 |
+| GET | /user-service/token/access-refresh | Access Token Refresh 요청 |
+| GET | /user-service/admin/users | 관리자 전체 회원 조회 요청 |
+
+
 ## 인증 플로우
 ![img.png](img.png)
 
