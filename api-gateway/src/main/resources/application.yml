@@ -46,7 +46,6 @@ spring:
           predicates:
             - Path=/user-service/**
 
-
 management:
   endpoint:
     features:
