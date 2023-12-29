@@ -56,7 +56,7 @@ management:
         include:
           - "*"
 
-
+# env.properties에 넣어줘야 한다
 secret:
   jwt:
     token:
